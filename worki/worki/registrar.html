@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Worki - Registrar Usuario</title>
+
+    <!-- Custom fonts for this template-->
+    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+        rel="stylesheet">
+
+    <!-- Custom styles for this template-->
+    <link href="css/sb-admin-2.min.css" rel="stylesheet">
+
+           <!-- Custom fonts for this template-->
+    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+        rel="stylesheet">
+
+    <!-- Custom styles for this template-->
+    <link href="css/sb-admin-2.min.css" rel="stylesheet">
+
+     <!-- Custom fonts for this template-->
+    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+        rel="stylesheet">
+
+    <!-- Custom styles for this template-->
+    <link href="css/sb-admin-2.min.css" rel="stylesheet">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function(e){
+
+            $("#FormularioNuevoUsuario").on('submit', function(e){
+
+                var password = document.getElementById("password").value;
+                var repeatPasword = document.getElementById("repeatPasword").value;
+
+                if (password != repeatPasword) {
+                    alert("la clave y la confirmacion no coinciden");
+                } else {
+                    e.preventDefault();
+                    $.ajax({
+                        type: 'POST',
+                        url: "AplicacionControl/ControlSession.php?action=registrarNuevoUsuario" ,
+                        data: new FormData(this),
+                        contentType: false,
+                        cache: false,
+                        processData:false,
+                        dataType : "json",
+                        beforeSend: function(){
+                            $('.submitBtn').attr("disabled","disabled");
+                            $('#fupForm').css("opacity",".5");
+                        },
+                        success: function(json) {
+                            console.log(json);
+                        
+                            var conexion = json.conexion;
+                            if(conexion == 0){
+                              setTimeout(function(){window.location.href="ErrorConexion.php";},2);  
+                            }else{
+                              var error = json.errorA;
+                              if(error == true){
+                                //Sexy.error(json.mensaje);
+                                alert(json.mensaje);
+                                
+                              }else{
+                                 alert("Usuario creado correctamente");
+                                
+                                
+                                var redirecction = json.redirecction;
+                                if(redirecction != ""){
+                                  if(redirecction == 1){
+                                    setTimeout(function(){window.location.href="perfil.php";},2 ); 
+                                  }else{
+                                    setTimeout(function(){window.location.href="ActPass.php";},2); 
+                                  } 
+                                }
+
+                                
+                              }
+                            }
+                            
+                          }
+                    });
+                }
+
+                
+            });
+        
+        });
+    </script>
+</head>
+
+<body class="bg-gradient-light">
+
+    <div class="container">
+
+        <div class="card o-hidden border-0 shadow-lg my-5">
+            <div class="card-body p-0">
+                <!-- Nested Row within Card Body -->
+                <div class="row">
+                    <div class="col-lg-5 d-none d-lg-block bg-register-image"></div>
+                    <div class="col-lg-7">
+                        <div class="p-5">
+                            <div class="text-center">
+                                <h1 class="h4 text-gray-900 mb-4">¡Crea una cuenta!</h1>
+                            </div>
+
+
+                            <form enctype="multipart/form-data" id="FormularioNuevoUsuario" >
+                                <div class="form-group row">
+                                    <div class="col-sm-6 mb-3 mb-sm-0">
+                                        <label for="inputPassword" class="col-sm-6 col-form-label">Nombre</label>
+                                        <input type="text" class="form-control form-control-user" id="nombre" name="nombre"
+                                            placeholder="Ingrese sus Nombres" required>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <label for="inputPassword" class="col-sm-6 col-form-label">Apellidos</label>
+                                        <input type="text" class="form-control form-control-user" id="apellidos" name="apellidos"
+                                            placeholder="Ingrese sus Apellidos" required>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="inputPassword" class="col-sm-3 col-form-label">Email</label>
+                                    <input type="email" class="form-control form-control-user" id="email" name="email"
+                                        placeholder="Ingrese su Dirección de Correo Corporativo" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="inputPassword" class="col-sm-3 col-form-label">Palabra Clave</label>
+                                    <input type="text" class="form-control form-control-user" id="palabra_clave" name="palabra_clave"
+                                        placeholder="Ingrese una palabra clave" required>
+                                </div>
+
+
+                                <div class="form-group row">
+                                    <div class="col-sm-6 mb-3 mb-sm-0">
+                                        <label for="inputPassword" class="col-sm-12 col-form-label">Empresa</label>
+                                        <select class="form-control form-control-user" aria-label=".form-select-lg example" name="empresa" id="empresa" required>
+                                            <option value ="" selected>Seleccione empresa a la que pertenece</option>
+                                        </select>
+                                    </div>
+                                
+                                    <div class="col-sm-6">
+                                        <label for="inputPassword" class="col-sm-12 col-form-label">Cargo</label>
+                                        <input type="text" class="form-control form-control-user" id="cargo" name="cargo"
+                                        placeholder="Ingrese su cargo en la Empresa" required>
+                                    </div>
+                                </div>
+
+
+
+                                
+                                <div class="form-group row">
+                                    <div class="col-sm-6 mb-3 mb-sm-0">
+                                        <label for="inputPassword" class="col-sm-12 col-form-label">Numero Telefonico</label>
+                                        <input type="text" class="form-control form-control-user" id="telefono" name="telefono"
+                                            placeholder="Ingrese su numero telefonico" required>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <label for="inputPassword" class="col-sm-12 col-form-label">Dirección Recidencia</label>
+                                        <input type="text" class="form-control form-control-user" id="direccion" name="direccion"
+                                            placeholder="Ingrese su dirección recidencia" required>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-sm-6 mb-3 mb-sm-0">
+                                        <label for="inputPassword" class="col-sm-12 col-form-label">Contraseña</label>
+                                        <input type="password" class="form-control form-control-user"
+                                            id="password" name="password" placeholder="Password" required>
+                                    </div>
+                                
+                                    <div class="col-sm-6">
+                                        <label for="inputPassword" class="col-sm-12 col-form-label">Repita Contraseña</label>
+                                        <input type="password" class="form-control form-control-user"
+                                            id="repeatPasword" name="repeatPasword" placeholder="Repeat Password" required>
+                                    </div>
+                                </div>
+                                <input type="submit" name="submit" class="btn btn-primary btn-user btn-block" value="Registrar Cuenta"/>
+
+                                <hr>
+                                
+                            </form>
+                            <hr>
+                            <div class="text-center">
+                                <a class="small" href="recuperar_clave.html">Recuperar Clave</a>
+                            </div>
+
+                            <div class="text-center">
+                                <a class="small" href="login.html">¿Ya tienes una cuenta? ¡Acceso!</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script type="text/javascript">
+        
+        cargarEmpresas();
+
+        function cargarEmpresas(){
+
+
+            jQuery.ajax({
+              type: "POST",
+              dataType : "json",
+              url: "AplicacionControl/ControlSession.php?action=cargarEmpresas" ,
+              data: jQuery("#formNuevoUsuario").serialize(),
+              success: function(json) {
+                console.log(json);
+                var conexion = json.conexion;
+                if(conexion == 0){
+                  setTimeout(function(){window.location.href="ErrorConexion.php";},2);  
+                }else{
+                  var error = json.errorA;
+                  if(error == true){
+                    Sexy.error(json.mensaje);
+                  }else{
+                    addOptions('empresa', json.mensaje);
+                  }
+                }
+              }
+            });
+        
+            
+        }
+        // Rutina para agregar opciones a un <select>
+        function addOptions(domElement, json) {
+        
+        
+         var select = document.getElementsByName(domElement)[0];
+         for(var i=0; i < json.length; i++){
+            var option = document.createElement("option");
+            option.text = json[i][1];
+            option.value = json[i][0];
+            select.add(option);
+         }
+         
+        }
+
+    </script>
+
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="js/sb-admin-2.min.js"></script>
+
+</body>
+
+</html>
